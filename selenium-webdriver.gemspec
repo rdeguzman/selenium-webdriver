@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
   s.summary = "The next generation developer focused tool for automated testing of webapps"
+  s.files   = Dir.glob("{lib}/**/*") + %w(CHANGES COPYING README)
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
