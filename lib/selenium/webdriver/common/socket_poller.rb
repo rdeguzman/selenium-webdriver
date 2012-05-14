@@ -61,12 +61,15 @@ module Selenium
           sockaddr = Socket.pack_sockaddr_in(@port, addr[0][3])
 
           begin
-            if @first_run
-              sleep 5
+            if RUBY_PLATFORM =~ /freebsd/i
+              if @first_run
+                puts "FreeBSD and FF patch. Sleep for 5"
+                sleep 5
+                @first_run = false
+              end
             end
 
             sock.connect_nonblock sockaddr
-            @first_run = false
           rescue Errno::EINPROGRESS
             if IO.select(nil, [sock], nil, CONNECT_TIMEOUT)
               retry
