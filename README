@@ -1,3 +1,17 @@
+== Why was this forked?
+The reason I forked this is because I am getting an error "Invalid argument - connect(2) (Errno::EINVAL)" on FreeBSD(8.2-STABLE FreeBSD) + firefox v12.0.
+    
+     Errno::EINVAL:
+       Invalid argument - connect(2)
+     # ./spec/support/shared_context_for_login.rb:4:in `login_user'
+
+My current fix is for the driver to wait if FF is loaded. 
+Please see "https://github.com/rdeguzman/selenium-webdriver/blob/master/lib/selenium/webdriver/common/socket_poller.rb"
+
+The Gemfile should now contain:
+
+gem "selenium-webdriver", "2.21.2", :git => 'git://github.com/rdeguzman/selenium-webdriver.git'
+
 = selenium-webdriver
 
 This gem provides Ruby bindings for WebDriver and has been tested to work on MRI (1.8.7 through 1.9), JRuby and Rubinius.
