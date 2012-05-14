@@ -10,6 +10,7 @@ module Selenium
         @port     = Integer(port)
         @timeout  = Float(timeout)
         @interval = interval
+        @first_run = true
       end
 
       #
@@ -60,7 +61,12 @@ module Selenium
           sockaddr = Socket.pack_sockaddr_in(@port, addr[0][3])
 
           begin
+            if @first_run
+              sleep 5
+            end
+
             sock.connect_nonblock sockaddr
+            @first_run = false
           rescue Errno::EINPROGRESS
             if IO.select(nil, [sock], nil, CONNECT_TIMEOUT)
               retry
