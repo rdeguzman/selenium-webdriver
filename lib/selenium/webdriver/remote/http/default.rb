@@ -11,11 +11,6 @@ module Selenium
 
           private
 
-          def initialize
-            super
-            @proxy = nil
-          end
-
           def http
             @http ||= (
               http = new_http_client
@@ -55,6 +50,12 @@ module Selenium
               retries += 1
 
               retry
+            rescue Errno::ECONNREFUSED => ex
+              if use_proxy?
+                raise ex.class, "using proxy: #{proxy.http}"
+              else
+                raise
+              end
             end
 
             if response.kind_of? Net::HTTPRedirection
@@ -82,16 +83,40 @@ module Selenium
           end
 
           def new_http_client
-            if @proxy
-              unless @proxy.respond_to?(:http) && url = @proxy.http
+            if use_proxy?
+              unless proxy.respond_to?(:http) && url = @proxy.http
                 raise Error::WebDriverError, "expected HTTP proxy, got #{@proxy.inspect}"
               end
+
               proxy = URI.parse(url)
 
               clazz = Net::HTTP::Proxy(proxy.host, proxy.port, proxy.user, proxy.password)
               clazz.new(server_url.host, server_url.port)
             else
               Net::HTTP.new server_url.host, server_url.port
+            end
+          end
+
+          def proxy
+            @proxy ||= (
+              proxy = ENV['http_proxy'] || ENV['HTTP_PROXY']
+              no_proxy = ENV['no_proxy'] || ENV['NO_PROXY']
+
+              if proxy
+                proxy = "http://#{proxy}" unless proxy.start_with?("http://")
+                Proxy.new(:http => proxy, :no_proxy => no_proxy)
+              end
+            )
+          end
+
+          def use_proxy?
+            return false if proxy.nil?
+
+            if proxy.no_proxy
+              hosts = proxy.no_proxy.split(",")
+              !(hosts.include?(server_url.host) || hosts.first == "*")
+            else
+              true
             end
           end
 
