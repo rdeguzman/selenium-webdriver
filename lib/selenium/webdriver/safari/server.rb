@@ -82,8 +82,8 @@ Server: safaridriver-ruby
 // SafariDriver extension.
 window.onload = function() {
   window.postMessage({
-    'message': 'connect',
-    'source': 'webdriver',
+    'type': 'connect',
+    'origin': 'webdriver',
     'url': '%s'
   }, '*');
 };

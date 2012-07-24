@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = "selenium-webdriver"
-  s.version = "2.21.2"
+  s.version = "2.25.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jari Bakken"]
-  s.date = "2012-04-11"
+  s.date = "2012-07-21"
   s.description = "WebDriver is a tool for writing automated tests of websites. It aims to mimic the behaviour of a real user, and as such interacts with the HTML of the application."
   s.email = "jari.bakken@gmail.com"
   s.homepage = "http://selenium.googlecode.com"
